@@ -47,7 +47,7 @@ const HeroPage = () => {
           sx={{ display: "flex", justifyContent: "center" }}
         >
           {data.map((item) => (
-            <Grid item>
+            <Grid item key={item.title}>
               <CustomCard item={item} />
             </Grid>
           ))}

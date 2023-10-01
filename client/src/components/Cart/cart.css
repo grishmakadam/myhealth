@@ -1,0 +1,27 @@
+.cartButton{
+    display: flex;
+   box-shadow:  0px 3px 10px rgba(0, 0, 0, 0.24);
+   border-radius: 5px;
+margin-bottom: 20px;}
+
+.box{
+    padding: 5px 10px;
+}
+
+.box:nth-child(even){
+    border-left:1px solid #ddd;    
+    border-right: 1px solid #ddd;   
+
+}
+.box:nth-child(odd){
+   cursor: pointer;  
+    background-color: rgba(210, 210, 210, 0.24);
+}
+
+.headerFont{
+    font-size:20px!important;
+}
+
+.normalFont{
+    font-size: 18px;
+}

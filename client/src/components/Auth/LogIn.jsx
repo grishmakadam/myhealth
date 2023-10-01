@@ -1,19 +1,21 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Input from "../utils/Input";
 import { Box, Container, Typography, Button, Divider } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import { loginUserApi } from "../../apicalls/apicalls";
+import { AuthContext } from "../context/authContext";
 
 const LogIn = () => {
   const navigate = useNavigate();
+  const { dispatch } = useContext(AuthContext);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
 
   const [error, setError] = useState({
-    email: {error:false,message:"Email is required"},
-    password: {error:false,message:"Password is required"},
+    email: { error: false, message: "Email is required" },
+    password: { error: false, message: "Password is required" },
   });
 
   const onChangeData = (e) => {
@@ -23,41 +25,46 @@ const LogIn = () => {
     }));
   };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-let m=0
-        if (formData.email == "") {
-            setError((prev) => ({ ...prev, email: {...prev.email,error:true} }));
-            m=1
-        } else {
-            setError((prev) => ({ ...prev, email:{...prev.email,error:false} }));
-        }
-        if (formData.password == "") {
-            setError((prev) => ({ ...prev, password: {...prev.password,error:true} }));
-            m=1
-        } else {
-            setError((prev) => ({ ...prev, password:{...prev.password,error:false} }));
-        }
-        if (m == 1) {
-            console.log("hii")
-            return;
-        }
-      
-        const res = await loginUserApi(formData);
-        if (res.success) {
-            localStorage.setItem("email", res.email);
-            localStorage.setItem("name", res.name);
-            navigate("/")
-        } else {
-      
-      
-            setError((prev) => ({
-                ...prev,
-                password: { error: true, message: res.message },
-       
-            }))
-        };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    let m = 0;
+    if (formData.email == "") {
+      setError((prev) => ({ ...prev, email: { ...prev.email, error: true } }));
+      m = 1;
+    } else {
+      setError((prev) => ({ ...prev, email: { ...prev.email, error: false } }));
     }
+    if (formData.password == "") {
+      setError((prev) => ({
+        ...prev,
+        password: { ...prev.password, error: true },
+      }));
+      m = 1;
+    } else {
+      setError((prev) => ({
+        ...prev,
+        password: { ...prev.password, error: false },
+      }));
+    }
+    if (m == 1) {
+      console.log("hii");
+      return;
+    }
+
+    const res = await loginUserApi(formData);
+    if (res.success) {
+      dispatch({
+        type: "LOGIN",
+        payload: { email: res.email, name: res.name },
+      });
+      navigate("/");
+    } else {
+      setError((prev) => ({
+        ...prev,
+        password: { error: true, message: res.message },
+      }));
+    }
+  };
 
   return (
     <Container
@@ -92,7 +99,7 @@ let m=0
             name="email"
             onChange={onChangeData}
             error={error.email.error}
-            _helperText={error.email.error && error.email.message }
+            _helperText={error.email.error && error.email.message}
           />
           <Input
             label="Password"
@@ -100,7 +107,7 @@ let m=0
             type="password"
             onChange={onChangeData}
             error={error.password.error}
-            _helperText={error.password.error &&  error.password.message }
+            _helperText={error.password.error && error.password.message}
           />
           <Button fullWidth variant="contained" type="submit">
             Sign In

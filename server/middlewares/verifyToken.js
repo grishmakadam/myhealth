@@ -5,14 +5,14 @@ module.exports.verifyToken = async (req, res, next) => {
   console.log(req.cookies);
   if (!req.cookies) {
     console.log("NO COOKIES");
-    return res.json({ status: false });
+    return res.json({ success: false });
   }
   const token = req.cookies.token;
 
   if (!token) {
     console.log("FALSE COOKIES");
 
-    return res.json({ status: "false", error: "Session Expired" });
+    return res.json({ success: false, error: "Session Expired" });
   }
   try {
    

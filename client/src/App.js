@@ -5,22 +5,51 @@ import HeroPage from "./components/Hero/HeroPage";
 import { ThemeProvider } from "@emotion/react";
 import theme from "./Theme/theme";
 import LogIn from "./components/Auth/LogIn";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import Registration from "./components/Auth/Registration";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import MainContainer from "./components/MainContainer";
 import SpecificPlans from "./components/Plans/SpecificPlans";
+import {
+  AuthContext,
+  AuthContextProvider,
+} from "./components/context/authContext";
+import { verifyUserApi } from "./apicalls/apicalls";
+import Cart from "./components/Cart/Cart";
 function App() {
-  const user = localStorage.getItem("email");
+  const { user, dispatch } = useContext(AuthContext);
+
+  const verify = async () => {
+    const res = await verifyUserApi();
+    console.log(res);
+    if (res.success) {
+      dispatch({
+        type: "LOGIN",
+        payload: { email: res.email, name: res.name },
+      });
+    } else {
+    }
+  };
+  useEffect(() => {
+    verify();
+  }, []);
   return (
     <ThemeProvider theme={theme}>
       <Router>
         {/* <ResponsiveAppBar /> */}
-        {user && <ResponsiveAppBar />}
         <Routes>
           <Route exact path="/" element={<MainContainer />}>
             <Route path="/" element={<HeroPage />} />
-            <Route path="/plans/:type" element={<SpecificPlans/>}/>
+            <Route path="/plans/:type" element={<SpecificPlans />} />
+            <Route
+              path="/cart"
+              element={user ? <Cart /> : <Navigate to="/" />}
+            />
           </Route>
           <Route path="/login" element={<LogIn />} />
           <Route path="/register" element={<Registration />} />

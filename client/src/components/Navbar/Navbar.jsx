@@ -14,17 +14,24 @@ import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import MedicineIcon from "../../assets/Medicine";
 import { useNavigate } from "react-router-dom";
-
-const pages = [
+import PlanPopper from "../utils/PlanPopper";
+import { AuthContext } from "../context/authContext";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+const loggedOut = [
   { text: "Home", link: "/" },
+  { text: "Plans" },
   { text: "SignUp", link: "/register" },
   { text: "LogIn", link: "/login" },
 ];
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
+
+const loggedIn = [{ text: "Home", link: "/" }, { text: "Plans" }];
+
+const settings = ["Account", "Logout"];
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [pages, setPages] = React.useState(loggedOut);
   const navigate = useNavigate();
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -38,15 +45,24 @@ function ResponsiveAppBar() {
   };
 
   const handleClick = (link) => {
-    console.log("hii");
     navigate(link);
   };
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
 
+  const { user } = React.useContext(AuthContext);
+
+    React.useEffect(() => {
+      console.log(user)
+    if (user) {
+      setPages(loggedIn);
+    } else {
+      setPages(loggedOut);
+    }
+  }, [user]);
   return (
-    <AppBar position="sticky"  sx={{ backgroundColor: "#fff",top:0 }}>
+    <AppBar position="sticky" sx={{ backgroundColor: "#fff", top: 0 }}>
       <Container maxWidth="xl">
         <Toolbar
           disableGutters
@@ -100,57 +116,95 @@ function ResponsiveAppBar() {
                 {pages.map((page) => (
                   <MenuItem
                     key={page.text}
-                    onClick={() => handleClick(page.link)}
+                    onClick={() => page.link && handleClick(page.link)}
                   >
-                    <Typography textAlign="center" color="primary">
-                      {page.text}
-                    </Typography>
+                    {page.link && (
+                      <Typography textAlign="center" color="primary">
+                        {page.text}
+                      </Typography>
+                    )}
+                    {!page.link && <PlanPopper placement="left-start" />}
                   </MenuItem>
                 ))}
               </Menu>
             </Box>
 
             <Box sx={{ display: { xs: "none", md: "flex" }, marginX: "30px" }}>
-              {pages.map((page) => (
-                <Button
-                  key={page.text}
-                  onClick={() => handleClick(page.link)}
-                  sx={{ my: 2, color: "primary", display: "block" }}
-                >
-                  {page.text}
-                </Button>
-              ))}
+              {pages.map((page) =>
+                page.link ? (
+                  <Button
+                    key={page.text}
+                    onClick={() => handleClick(page.link)}
+                    sx={{
+                      my: 2,
+                      color: "primary",
+                      display: "block",
+                      position: "relative",
+                      "&:before": {
+                        content: "''",
+                        position: "absolute",
+                        width: "0",
+                        height: "2px",
+                        bottom: "-3px",
+                        left: "50%",
+                        transform: "translate(-50%,0%)",
+                        backgroundColor: "primary.main",
+                        visibility: "hidden",
+                        transition: "all 0.3s ease-in-out",
+                      },
+                      "&:hover:before": {
+                        visibility: "visible",
+                        width: "100%",
+                      },
+                    }}
+                  >
+                    {page.text}
+                  </Button>
+                ) : (
+                  <PlanPopper />
+                )
+              )}
+              {user && (
+                <IconButton onClick={() => handleClick("/cart")}>
+                  <ShoppingCartIcon />
+                </IconButton>
+              )}
             </Box>
 
-            <Box sx={{ flexGrow: 0 }}>
-              <Tooltip title="Open settings">
-                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-                </IconButton>
-              </Tooltip>
-              <Menu
-                sx={{ mt: "45px" }}
-                id="menu-appbar"
-                anchorEl={anchorElUser}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                open={Boolean(anchorElUser)}
-                onClose={handleCloseUserMenu}
-              >
-                {settings.map((setting) => (
-                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                    <Typography textAlign="center">{setting}</Typography>
-                  </MenuItem>
-                ))}
-              </Menu>
-            </Box>
+            {user && (
+              <Box sx={{ flexGrow: 0 }}>
+                <Tooltip title="Open settings">
+                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                    <Avatar
+                      alt="Remy Sharp"
+                      src="/static/images/avatar/2.jpg"
+                    />
+                  </IconButton>
+                </Tooltip>
+                <Menu
+                  sx={{ mt: "45px" }}
+                  id="menu-appbar"
+                  anchorEl={anchorElUser}
+                  anchorOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  open={Boolean(anchorElUser)}
+                  onClose={handleCloseUserMenu}
+                >
+                  {settings.map((setting) => (
+                    <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                      <Typography textAlign="center">{setting}</Typography>
+                    </MenuItem>
+                  ))}
+                </Menu>
+              </Box>
+            )}
           </Box>
         </Toolbar>
       </Container>

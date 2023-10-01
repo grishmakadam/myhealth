@@ -13,7 +13,7 @@ module.exports = {
       res.cookie("token", token, {
         expires: new Date(Date.now() + 900000000),
         httpOnly: true,
-        secure: true,
+        // secure: true,
       });
       res.json({
         success: true,

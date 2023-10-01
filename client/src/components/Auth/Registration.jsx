@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Input from "../utils/Input";
 import { Box, Container, Typography, Button, Divider } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import { registerUserApi } from "../../apicalls/apicalls";
+import { AuthContext } from "../context/authContext";
 
 const Registration = () => {
-    const navigate=useNavigate()
+  const navigate = useNavigate();
+  const { dispatch } = useContext(AuthContext);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -40,19 +42,19 @@ const Registration = () => {
   };
 
   const handleSubmit = async (e) => {
-      e.preventDefault();
-      let m=0
+    e.preventDefault();
+    let m = 0;
     const regex =
       /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,}$/;
     if (formData.name == "") {
-        setError((prev) => ({ ...prev, name: { ...prev.name, error: true } }));
-        m=1
+      setError((prev) => ({ ...prev, name: { ...prev.name, error: true } }));
+      m = 1;
     } else {
       setError((prev) => ({ ...prev, name: { ...prev.name, error: false } }));
     }
     if (formData.email == "") {
-        setError((prev) => ({ ...prev, email: { ...prev.email, error: true } }));
-        m=1
+      setError((prev) => ({ ...prev, email: { ...prev.email, error: true } }));
+      m = 1;
     } else {
       setError((prev) => ({ ...prev, email: { ...prev.email, error: false } }));
     }
@@ -62,23 +64,25 @@ const Registration = () => {
         ...prev,
         password: { ...prev.password, error: true },
       }));
-        m=1
+      m = 1;
     } else {
       setError((prev) => ({
         ...prev,
         password: { ...prev.password, error: false },
       }));
     }
-      if (m==1) {
-          console.log("hii")
+    if (m == 1) {
+      console.log("hii");
       return;
     }
 
     const res = await registerUserApi(formData);
     if (res.success) {
-      localStorage.setItem("email", res.email);
-        localStorage.setItem("name", res.name);
-        navigate("/")
+      dispatch({
+        type: "LOGIN",
+        payload: { email: res.email, name: res.name },
+      });
+      navigate("/");
     } else {
       if (res.field == "email") {
         setError((prev) => ({
