@@ -6,7 +6,7 @@ export const AuthContextProvider = ({ children }) => {
   const authReducer = (state, action) => {
       if (action.type == "LOGIN") {
         console.log(action.payload)
-      sessionStorage.setItem("user", action.payload);
+      sessionStorage.setItem("user", JSON.stringify(action.payload));
 
       return {
         user: action.payload,

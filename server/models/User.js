@@ -1,8 +1,7 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
-const bcrypt = require("bcrypt");
 const speakeasy = require("speakeasy");
-
+const {encryptPassword}=require("../func/encryptPassword")
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -41,8 +40,7 @@ userSchema.statics.register = async function (name, email, password) {
     throw { field: "email", message: "Email already in use" };
   }
 
-  const salt = await bcrypt.genSalt();
-  const hash = await bcrypt.hash(password, salt);
+  const hash = await encryptPassword(password)
 
   const otpSecret = speakeasy.generateSecret({ length: 20 }).base32;
 

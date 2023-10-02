@@ -4,6 +4,7 @@ import { Box, Container, Typography, Button, Divider } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import { registerUserApi } from "../../apicalls/apicalls";
 import { AuthContext } from "../context/authContext";
+import Card from "../utils/Card";
 
 const Registration = () => {
   const navigate = useNavigate();
@@ -21,6 +22,10 @@ const Registration = () => {
       error: false,
       message:
         "Password should be 8 characters long*Password should be combination of uppercase,lowercase,numbers and special characters",
+    },
+    confirmPassword: {
+      error: false,
+      message: "Both password did not match",
     },
   });
 
@@ -71,8 +76,22 @@ const Registration = () => {
         password: { ...prev.password, error: false },
       }));
     }
+    if (
+      formData.confirmPassword == "" ||
+      formData.confirmPassword != formData.password
+    ) {
+      setError((prev) => ({
+        ...prev,
+        confirmPassword: { ...prev.confirmPassword, error: true },
+      }));
+      m = 1;
+    } else {
+      setError((prev) => ({
+        ...prev,
+        confirmPassword: { ...prev.confirmPassword, error: false },
+      }));
+    }
     if (m == 1) {
-      console.log("hii");
       return;
     }
 
@@ -101,78 +120,66 @@ const Registration = () => {
   };
 
   return (
-    <Container
-      sx={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        height: "100vh",
-        backgroundColor: "#f5f5f5",
-        maxWidth: "100vw !important",
-      }}
-    >
-      <Box
-        sx={{
-          padding: "30px",
-          boxShadow: "rgba(17, 17, 26, 0.1) 0px 0px 16px",
-          ":hover": {
-            boxShadow:
-              "rgba(17, 17, 26, 0.1) 0px 1px 0px, rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 48px",
-          },
-          width: "360px",
-        }}
-      >
-        <form onSubmit={handleSubmit}>
-          <Typography textAlign="center" marginBottom="20px">
-            Create Account
-          </Typography>
-          <Input
-            label="User Name"
-            type="text"
-            name="name"
-            onChange={onChangeData}
-            error={error.name.error}
-            _helperText={
-              (error.name.error || touched.name) && error.name.message
-            }
-            onFocus={(e) => handleTouch(e, true)}
-            onBlur={(e) => handleTouch(e, false)}
-          />
-          <Input
-            label="Email"
-            type="email"
-            name="email"
-            onChange={onChangeData}
-            error={error.email.error}
-            _helperText={
-              (error.email.error || touched.email) && error.email.message
-            }
-            onFocus={(e) => handleTouch(e, true)}
-            onBlur={(e) => handleTouch(e, false)}
-          />
-          <Input
-            label="Password"
-            name="password"
-            type="password"
-            onChange={onChangeData}
-            error={error.password.error}
-            _helperText={
-              (error.password.error || touched.password) &&
-              error.password.message
-            }
-            onFocus={(e) => handleTouch(e, true)}
-            onBlur={(e) => handleTouch(e, false)}
-          />
-          <Button fullWidth variant="contained" type="submit">
-            Register
-          </Button>
-        </form>
-        <Divider sx={{ marginY: "10px" }}>Or</Divider>
-        <Typography variant="body2" textAlign="center">
-          Already a user?<Link to="/login">LOGIN</Link>
+    <Card>
+      <form onSubmit={handleSubmit}>
+        <Typography textAlign="center" marginBottom="20px">
+          Create Account
         </Typography>
-      </Box>
-    </Container>
+        <Input
+          label="User Name"
+          type="text"
+          name="name"
+          onChange={onChangeData}
+          error={error.name.error}
+          _helperText={(error.name.error || touched.name) && error.name.message}
+          onFocus={(e) => handleTouch(e, true)}
+          onBlur={(e) => handleTouch(e, false)}
+        />
+        <Input
+          label="Email"
+          type="email"
+          name="email"
+          onChange={onChangeData}
+          error={error.email.error}
+          _helperText={
+            (error.email.error || touched.email) && error.email.message
+          }
+          onFocus={(e) => handleTouch(e, true)}
+          onBlur={(e) => handleTouch(e, false)}
+        />
+        <Input
+          label="Password"
+          name="password"
+          type="password"
+          onChange={onChangeData}
+          error={error.password.error}
+          _helperText={
+            (error.password.error || touched.password) && error.password.message
+          }
+          onFocus={(e) => handleTouch(e, true)}
+          onBlur={(e) => handleTouch(e, false)}
+        />
+          <Input
+          label="Confirm Password"
+          name="confirmPassword"
+          type="password"
+          onChange={onChangeData}
+          error={error.confirmPassword.error}
+          _helperText={
+            (error.confirmPassword.error ) && error.confirmPassword.message
+          }
+          onFocus={(e) => handleTouch(e, true)}
+          onBlur={(e) => handleTouch(e, false)}
+        />
+        <Button fullWidth variant="contained" type="submit">
+          Register
+        </Button>
+      </form>
+      <Divider sx={{ marginY: "10px" }}>Or</Divider>
+      <Typography variant="body2" textAlign="center">
+        Already a user?<Link to="/login">LOGIN</Link>
+      </Typography>
+    </Card>
   );
 };
 

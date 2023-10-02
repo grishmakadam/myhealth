@@ -12,5 +12,8 @@ router.get("/verifyUser", verifyToken, async (req, res) => {
     return res.json({ success: true, message: "user authorized",email,name });
   }
 });
+router.get("/forgetPassword/:email", userController.forgetPassword);
+router.post("/verifyOTP", userController.otpVerify);
+
 module.exports = router;
 

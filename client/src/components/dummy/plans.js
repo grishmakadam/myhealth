@@ -1,62 +1,71 @@
 export const plans = {
   "diabetes-plans": [
     {
-      title: "Star Health & Allied Diabetes Safe Health",
-      desc: "Pre-post hospitalization cover  In-patient hospitalization cover  Annual health check-ups" ,
+      planId: 1,
+      planName: "Star Health & Allied Diabetes Safe Health",
+      desc: "Pre-post hospitalization cover  In-patient hospitalization cover  Annual health check-ups",
       price: 800,
-      sum:6
+      sum: 6,
     },
     {
-      title: "Aditya Birla Activ Assure Diamond Plan",
-      desc: "Pre-post hospitalization cover  In-patient hospitalization cover  Annual health check-ups" ,
+      planId: 2,
+      planName: "Aditya Birla Activ Assure Diamond Plan",
+      desc: "Pre-post hospitalization cover  In-patient hospitalization cover  Annual health check-ups",
       price: 700,
-      sum:9
+      sum: 9,
     },
     {
-      title: "Bajaj Allianz Health Guard Policy",
-      desc: "Pre-post hospitalization cover  In-patient hospitalization cover  Annual health check-ups" ,
+      planId: 3,
+      planName: "Bajaj Allianz Health Guard Policy",
+      desc: "Pre-post hospitalization cover  In-patient hospitalization cover  Annual health check-ups",
       price: 900,
-      sum:10
+      sum: 10,
     },
   ],
   "cancer-plans": [
     {
-      title: "Cholamandalam Flexi Health Supreme Plan",
+      planId: 4,
+      planName: "Cholamandalam Flexi Health Supreme Plan",
       desc: "Pre-post hospitalization cover  In-patient hospitalization cover  Annual health check-ups  Ambulance cover",
       price: 800,
-      sum:40
+      sum: 40,
     },
     {
-      title: "Future Generali Health Total Policy",
+      planId: 5,
+      planName: "Future Generali Health Total Policy",
       desc: "Pre-post hospitalization cover  In-patient hospitalization cover  Annual health check-ups  Ambulance cover",
       price: 600,
-      sum:30
+      sum: 30,
     },
     {
-      title: "IFFCO Tokio Individual Health Protector Plan",
+      planId: 6,
+      planName: "IFFCO Tokio IndivplanIdual Health Protector Plan",
       desc: "Pre-post hospitalization cover  In-patient hospitalization cover  Annual health check-ups  Ambulance cover",
       price: 500,
-      sum:20
+      sum: 20,
     },
   ],
   "gynaec-plans": [
     {
-      title: "ManipalCigna ProHealth Insurance Policy",
+      planId: 7,
+      planName: "ManipalCigna ProHealth Insurance Policy",
       desc: "Pre-post hospitalization cover  In-patient hospitalization cover  Annual health check-ups  Maternity expenses",
       price: 900,
-      sum:10
+      sum: 10,
     },
     {
-      title: "Liberty HealthPrime Connect Policy",
+      planId: 8,
+      planName: "Liberty HealthPrime Connect Policy",
       desc: "Pre-post hospitalization cover  In-patient hospitalization cover  Annual health check-ups  Maternity expenses",
       price: 1200,
-      sum:15
+      sum: 15,
     },
     {
-      title: "New India Assurance Mediclaim Policy",
+      planId: 9,
+      planName: "New India Assurance Mediclaim Policy",
       desc: "Pre-post hospitalization cover  In-patient hospitalization cover  Annual health check-ups  Maternity expenses",
       price: 670,
-      sum:20
+      sum: 20,
     },
   ],
 };

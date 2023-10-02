@@ -4,6 +4,7 @@ import { Box, Container, Typography, Button, Divider } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import { loginUserApi } from "../../apicalls/apicalls";
 import { AuthContext } from "../context/authContext";
+import Card from "../utils/Card";
 
 const LogIn = () => {
   const navigate = useNavigate();
@@ -67,72 +68,48 @@ const LogIn = () => {
   };
 
   return (
-    <Container
-      sx={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        height: "100vh",
-        backgroundColor: "#f5f5f5",
-        maxWidth: "100vw !important",
-      }}
-    >
+    <Card>
+      <form onSubmit={handleSubmit}>
+        <Typography textAlign="center" marginBottom="20px">
+          Sign In
+        </Typography>
+
+        <Input
+          label="Email"
+          type="email"
+          name="email"
+          onChange={onChangeData}
+          error={error.email.error}
+          _helperText={error.email.error && error.email.message}
+        />
+        <Input
+          label="Password"
+          name="password"
+          type="password"
+          onChange={onChangeData}
+          error={error.password.error}
+          _helperText={error.password.error && error.password.message}
+        />
+        <Button fullWidth variant="contained" type="submit">
+          Sign In
+        </Button>
+      </form>
+
       <Box
         sx={{
-          padding: "30px",
-          boxShadow: "rgba(17, 17, 26, 0.1) 0px 0px 16px",
-          ":hover": {
-            boxShadow:
-              "rgba(17, 17, 26, 0.1) 0px 1px 0px, rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 48px",
-          },
-          width: "360px",
+          display: "flex",
+          justifyContent: "space-between",
+          marginY: "20px",
+          alignItems: "center",
         }}
       >
-        <form onSubmit={handleSubmit}>
-          <Typography textAlign="center" marginBottom="20px">
-            Sign In
-          </Typography>
+        <Button sx={{ fontSize: "12px" }} onClick={() => navigate("/register")}>
+          Create Account
+        </Button>
 
-          <Input
-            label="Email"
-            type="email"
-            name="email"
-            onChange={onChangeData}
-            error={error.email.error}
-            _helperText={error.email.error && error.email.message}
-          />
-          <Input
-            label="Password"
-            name="password"
-            type="password"
-            onChange={onChangeData}
-            error={error.password.error}
-            _helperText={error.password.error && error.password.message}
-          />
-          <Button fullWidth variant="contained" type="submit">
-            Sign In
-          </Button>
-        </form>
-
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            marginY: "20px",
-            alignItems: "center",
-          }}
-        >
-          <Button
-            sx={{ fontSize: "12px" }}
-            onClick={() => navigate("/register")}
-          >
-            Create Account
-          </Button>
-
-          <Link>Forgot Password?</Link>
-        </Box>
+        <Link to="/forget-password">Forgot Password?</Link>
       </Box>
-    </Container>
+    </Card>
   );
 };
 

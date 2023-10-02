@@ -33,7 +33,7 @@ const CustomCard = ({ item }) => {
             padding: "10px",
           }}
         >
-          <img src={item.image} width="200px" height="200px" />
+          <img src={item.image} width="200px" height="200px" alt={item.title} />
         </Box>
         <Box sx={{padding:"10px"}}>
           <Typography variant="h5" textAlign="center">{item.title}</Typography>

@@ -6,11 +6,14 @@ import {
   Typography,
   Divider,
 } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { plans } from "../dummy/plans";
 import Table from "./Table";
+import { useCart } from "../context/cartContext";
 const Cart = () => {
+  const { cart } = useCart();
+
+  console.log(cart);
   return (
     <Grid
       container
@@ -36,7 +39,7 @@ const Cart = () => {
           My Cart
         </Typography>
 
-        <Table plans={plans["diabetes-plans"]} />
+        <Table plans={cart.items} />
       </Grid>
       <Grid
         item
@@ -58,24 +61,41 @@ const Cart = () => {
         </Typography>
         <Divider width="100%" />
 
-        <Grid container>
-          <Grid
-            item
-            xs={12}
-            sx={{ display: "flex", justifyContent: "space-between" }}
-          >
-            <Typography>SubTotal</Typography>
-            <Typography>SubTotal</Typography>
+        {cart.total != 0 &&
+          <Grid container gap="10px" py={2}>
+            <Grid
+              item
+              xs={12}
+              sx={{ display: "flex", justifyContent: "space-between" }}
+            >
+              <Typography>SubTotal</Typography>
+              <Typography>Rs.{cart.total}</Typography>
+            </Grid>
+            <Grid
+              item
+              xs={12}
+              sx={{ display: "flex", justifyContent: "space-between" }}
+            >
+              <Typography>Additional Charges</Typography>
+              <Typography>Rs.{ 500}</Typography>
+            </Grid>
+            <Divider/>
+            <Grid
+              item
+              xs={12}
+              sx={{ display: "flex", justifyContent: "space-between" }}
+            >
+              <Typography variant="h6">Total</Typography>
+              <Typography  variant="h6">Rs.{ cart.total+500}</Typography>
+            </Grid>
           </Grid>
-          <Grid
-            item
-            xs={12}
-            sx={{ display: "flex", justifyContent: "space-between" }}
-          >
-            <Typography>Additional Charges</Typography>
-            <Typography>SubTotal</Typography>
-          </Grid>
-        </Grid>
+        }
+        {
+          cart.total == 0 &&
+          <Typography>
+              No Order Summary
+          </Typography>
+        }
       </Grid>
     </Grid>
   );

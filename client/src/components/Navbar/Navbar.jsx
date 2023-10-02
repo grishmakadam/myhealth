@@ -17,6 +17,8 @@ import { useNavigate } from "react-router-dom";
 import PlanPopper from "../utils/PlanPopper";
 import { AuthContext } from "../context/authContext";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import {Badge} from "@mui/material"
+import { useCart } from "../context/cartContext";
 const loggedOut = [
   { text: "Home", link: "/" },
   { text: "Plans" },
@@ -33,6 +35,7 @@ function ResponsiveAppBar() {
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [pages, setPages] = React.useState(loggedOut);
   const navigate = useNavigate();
+  const {cart}=useCart()
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -156,6 +159,10 @@ function ResponsiveAppBar() {
                         visibility: "visible",
                         width: "100%",
                       },
+                      "&:active": {
+                        visibility: "visible",
+                        width: "100%",
+                      }
                     }}
                   >
                     {page.text}
@@ -165,8 +172,11 @@ function ResponsiveAppBar() {
                 )
               )}
               {user && (
-                <IconButton onClick={() => handleClick("/cart")}>
-                  <ShoppingCartIcon />
+                
+                <IconButton onClick={() => handleClick("/cart")} color="primary">
+                  <Badge badgeContent={cart.quantity} color="primary">
+                    <ShoppingCartIcon />
+                    </Badge>
                 </IconButton>
               )}
             </Box>
