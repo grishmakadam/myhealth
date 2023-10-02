@@ -32,6 +32,7 @@ const ChangePassword = () => {
 
   const changePassword = async (e) => {
     e.preventDefault();
+    console.log(data);
     const regex =
       /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,}$/;
     if (data.newPassword == "" || !data.newPassword.match(regex)) {
@@ -73,9 +74,9 @@ const ChangePassword = () => {
         },
       }));
     }
-    const res = await changePasswordApi({...data,token});
+    const res = await changePasswordApi({ ...data, token });
     if (res.success) {
-      console.log(res.message);
+      navigate("/login");
     } else {
       setError((prev) => ({
         ...prev,

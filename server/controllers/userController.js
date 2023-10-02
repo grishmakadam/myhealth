@@ -32,7 +32,7 @@ module.exports = {
     try {
       const { email, password } = req.body;
       const user = await User.login(email, password);
-      const token = await createToken(email, "300s");
+      const token = await createToken(email);
 
       res.cookie("token", token, {
         httpOnly: true,
@@ -63,7 +63,7 @@ module.exports = {
       //   step: 60,
       //   window: 5,
       // });
-      const token = await createToken(email);
+      const token = await createToken(email, "300s");
 
       const temp = await sendOtp(user[0].email, token);
       if (temp) {
