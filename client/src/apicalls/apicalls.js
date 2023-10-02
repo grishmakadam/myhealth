@@ -1,9 +1,11 @@
 import axios from "axios";
 import {
   addToCartUrl,
+  changePasswordUrl,
   deleteFromCartUrl,
   forgetPasswordUrl,
   getAllItemsUrl,
+  logOutUrl,
   loginUserUrl,
   registerUserUrl,
   removeItemUrl,
@@ -66,5 +68,13 @@ export const forgetPasswordApi = (email) => {
 };
 
 export const verifyOtpApi = (data) => {
-  return api({url:verifyOtpUrl,method:"POST",data:data})
-}
+  return api({ url: verifyOtpUrl, method: "POST", data: data });
+};
+
+export const changePasswordApi = (data) => {
+  return api({ url: changePasswordUrl, method: "POST", data: data });
+};
+
+export const logOutApi = () => {
+  return api({ url: logOutUrl, method: "POST" });
+};

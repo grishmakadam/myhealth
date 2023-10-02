@@ -6,7 +6,8 @@ export const loginUserUrl = baseUserRoute + "/login";
 export const verifyUserUrl = baseUserRoute + "/verifyUser";
 export const forgetPasswordUrl = baseUserRoute + "/forgetPassword";
 export const verifyOtpUrl = baseUserRoute + "/verifyOTP";
-
+export const changePasswordUrl = baseUserRoute + "/changePassword";
+export const logOutUrl=baseUserRoute+"/logOut"
 
 export const addToCartUrl = basecartRoute + "/addToCart";
 export const deleteFromCartUrl = basecartRoute + "/deleteFromCart";

@@ -10,7 +10,7 @@ const ForgetPassword = () => {
     otp: "",
   });
 
-  const [showOtp, setShowOtp] = useState(false);
+  //   const [showOtp, setShowOtp] = useState(false);
 
   const [error, setError] = useState({
     email: { error: false, message: "Email is required" },
@@ -44,7 +44,7 @@ const ForgetPassword = () => {
     }
     const res = await forgetPasswordApi(data.email);
     if (res.success) {
-      setShowOtp(true);
+      //   setShowOtp(true);
     } else {
       setError((prev) => ({
         ...prev,
@@ -56,84 +56,80 @@ const ForgetPassword = () => {
     }
   };
 
-  const verifyOtp = async (e) => {
-    e.preventDefault();
+  //   const verifyOtp = async (e) => {
+  //     e.preventDefault();
 
-    if (data.otp == "") {
-      setError((prev) => ({
-        ...prev,
-        otp: {
-          ...prev.otp,
-          error: true,
-        },
-      }));
-      return;
-    } else {
-      setError((prev) => ({
-        ...prev,
-        otp: {
-          ...prev.otp,
-          error: false,
-        },
-      }));
-    }
-    const res = await verifyOtpApi(data);
-    if (res.success) {
-      console.log(res.message);
-    } else {
-      setError((prev) => ({
-        ...prev,
-        otp: {
-          error: true,
-          message: res.message,
-        },
-      }));
-    }
-  };
+  //     if (data.otp == "") {
+  //       setError((prev) => ({
+  //         ...prev,
+  //         otp: {
+  //           ...prev.otp,
+  //           error: true,
+  //         },
+  //       }));
+  //       return;
+  //     } else {
+  //       setError((prev) => ({
+  //         ...prev,
+  //         otp: {
+  //           ...prev.otp,
+  //           error: false,
+  //         },
+  //       }));
+  //     }
+  //     const res = await verifyOtpApi(data);
+  //     if (res.success) {
+  //       console.log(res.message);
+  //     } else {
+  //       setError((prev) => ({
+  //         ...prev,
+  //         otp: {
+  //           error: true,
+  //           message: res.message,
+  //         },
+  //       }));
+  //     }
+  //   };
 
   return (
- <Card>
-        <Typography textAlign="center" marginBottom="20px">
-          Reset Password
-        </Typography>
+    <Card>
+      <Typography textAlign="center" marginBottom="20px">
+        Reset Password
+      </Typography>
 
+      <Input
+        label="Email"
+        type="email"
+        name="email"
+        // disabled={showOtp ? true : false}
+        onChange={onChangeData}
+        error={error.email.error}
+        _helperText={error.email.error && error.email.message}
+      />
+
+      {/* {showOtp && (
         <Input
-          label="Email"
-          type="email"
-          name="email"
-          disabled={showOtp ? true : false}
+          label="OTP"
+          type="text"
+          name="otp"
           onChange={onChangeData}
-          error={error.email.error}
-          _helperText={error.email.error && error.email.message}
+          error={error.otp.error}
+          _helperText={error.otp.error && error.otp.message}
         />
-
-        {showOtp && (
-          <Input
-            label="OTP"
-            type="text"
-            name="otp"
-            onChange={onChangeData}
-            error={error.otp.error}
-            _helperText={error.otp.error && error.otp.message}
-          />
-        )}
-        {showOtp && (
-          <Typography
-            sx={{ fontSize: "12px", color: "primary.main", mb: 2 }}
-            onClick={resetPassword}
-            textAlign="end"
-          >
-            Resend 
-          </Typography>
-        )}
-        <Button
-          fullWidth
-          variant="contained"
-          onClick={!showOtp ? resetPassword : verifyOtp}
+      )} */}
+      {/* {showOtp && (
+        <Typography
+          sx={{ fontSize: "12px", color: "primary.main", mb: 2 }}
+          onClick={resetPassword}
+          textAlign="end"
         >
-          {showOtp ? "Submit" : "Send OTP"}
-        </Button>
-        </Card>
+          Resend
+        </Typography>
+      )} */}
+      <Button fullWidth variant="contained" onClick={resetPassword}>
+        Submit
+      </Button>
+    </Card>
   );
 };
 

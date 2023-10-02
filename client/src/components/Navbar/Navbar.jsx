@@ -17,8 +17,9 @@ import { useNavigate } from "react-router-dom";
 import PlanPopper from "../utils/PlanPopper";
 import { AuthContext } from "../context/authContext";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import {Badge} from "@mui/material"
+import { Badge } from "@mui/material";
 import { useCart } from "../context/cartContext";
+import { logOutApi } from "../../apicalls/apicalls";
 const loggedOut = [
   { text: "Home", link: "/" },
   { text: "Plans" },
@@ -28,14 +29,17 @@ const loggedOut = [
 
 const loggedIn = [{ text: "Home", link: "/" }, { text: "Plans" }];
 
-const settings = ["Account", "Logout"];
+const settings = [
+  { text: "Account", link: "/account" },
+  { text: "Log Out", link: "/logout" },
+];
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [pages, setPages] = React.useState(loggedOut);
   const navigate = useNavigate();
-  const {cart}=useCart()
+  const { cart } = useCart();
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -54,16 +58,20 @@ function ResponsiveAppBar() {
     setAnchorElUser(null);
   };
 
-  const { user } = React.useContext(AuthContext);
+  const { user, dispatch } = React.useContext(AuthContext);
 
-    React.useEffect(() => {
-      console.log(user)
+  React.useEffect(() => {
     if (user) {
       setPages(loggedIn);
     } else {
       setPages(loggedOut);
     }
   }, [user]);
+
+  const handleLogOut = async () => {
+    const res = await logOutApi();
+    dispatch({ type: "LOGOUT" });
+  };
   return (
     <AppBar position="sticky" sx={{ backgroundColor: "#fff", top: 0 }}>
       <Container maxWidth="xl">
@@ -162,7 +170,7 @@ function ResponsiveAppBar() {
                       "&:active": {
                         visibility: "visible",
                         width: "100%",
-                      }
+                      },
                     }}
                   >
                     {page.text}
@@ -172,11 +180,13 @@ function ResponsiveAppBar() {
                 )
               )}
               {user && (
-                
-                <IconButton onClick={() => handleClick("/cart")} color="primary">
+                <IconButton
+                  onClick={() => handleClick("/cart")}
+                  color="primary"
+                >
                   <Badge badgeContent={cart.quantity} color="primary">
                     <ShoppingCartIcon />
-                    </Badge>
+                  </Badge>
                 </IconButton>
               )}
             </Box>
@@ -207,11 +217,19 @@ function ResponsiveAppBar() {
                   open={Boolean(anchorElUser)}
                   onClose={handleCloseUserMenu}
                 >
-                  {settings.map((setting) => (
-                    <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                      <Typography textAlign="center">{setting}</Typography>
-                    </MenuItem>
-                  ))}
+                  <MenuItem onClick={handleCloseUserMenu}>
+                    <Typography
+                      textAlign="center"
+                      onClick={() => navigate("/")}
+                    >
+                      Account
+                    </Typography>
+                  </MenuItem>
+                  <MenuItem onClick={handleCloseUserMenu}>
+                    <Typography textAlign="center" onClick={handleLogOut}>
+                      Log Out
+                    </Typography>
+                  </MenuItem>
                 </Menu>
               </Box>
             )}

@@ -22,6 +22,7 @@ import {
 import { verifyUserApi } from "./apicalls/apicalls";
 import Cart from "./components/Cart/Cart";
 import ForgetPassword from "./components/Auth/ForgetPassword";
+import ChangePassword from "./components/Auth/ChangePassword";
 function App() {
   const { user, dispatch } = useContext(AuthContext);
 
@@ -55,6 +56,7 @@ function App() {
           <Route path="/login" element={<LogIn />} />
           <Route path="/register" element={<Registration />} />
           <Route path="/forget-password" element={<ForgetPassword />} />
+          <Route path="/reset-password/:token" element={<ChangePassword />} />
         </Routes>
       </Router>
     </ThemeProvider>

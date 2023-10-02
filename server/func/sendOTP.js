@@ -14,8 +14,8 @@ module.exports.sendOtp = async (email, token) => {
     to: email,
     subject: "Link to change password",
     html: `Click <a href=${
-      "http://localhost:3000/reset-password?token=" + token
-    }Here</a>`,
+      "http://localhost:3000/reset-password/" + token
+    }>Here</a>`,
   };
   const res = await mailer.sendMail(mailOptions);
   if (res.response) {

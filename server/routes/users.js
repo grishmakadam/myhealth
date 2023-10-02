@@ -7,13 +7,14 @@ const { verifyToken } = require("../middlewares/verifyToken");
 router.post("/register", userController.register);
 router.post("/login", userController.login);
 router.get("/verifyUser", verifyToken, async (req, res) => {
-    const { name, email }=req.user
-    if (req.user) {
-    return res.json({ success: true, message: "user authorized",email,name });
+  const { name, email } = req.user;
+  if (req.user) {
+    return res.json({ success: true, message: "user authorized", email, name });
   }
 });
 router.get("/forgetPassword/:email", userController.forgetPassword);
 router.post("/verifyOTP", userController.otpVerify);
+router.post("/changePassword", userController.changePassword);
+router.post("/logOut", verifyToken, userController.logout);
 
 module.exports = router;
-

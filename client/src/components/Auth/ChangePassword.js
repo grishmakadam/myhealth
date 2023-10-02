@@ -1,31 +1,44 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Card from "../utils/Card";
+import { useNavigate, useParams } from "react-router-dom";
+import { changePasswordApi, verifyUserApi } from "../../apicalls/apicalls";
+import { Container, Box, Typography, Button } from "@mui/material";
+import Input from "../utils/Input";
 
 const ChangePassword = () => {
   const [data, setData] = useState({
-    email: "",
-    otp: "",
+    newPassword: "",
+    confirmNewPassword: "",
   });
 
-  const [showOtp, setShowOtp] = useState(false);
+  const navigate = useNavigate();
+  const { token } = useParams();
 
   const [error, setError] = useState({
-    email: { error: false, message: "Email is required" },
-    otp: { error: false, message: "OTP is required" },
+    newPassword: {
+      error: false,
+      message:
+        "Password should be 8 characters long*Password should be combination of uppercase,lowercase,numbers and special characters",
+    },
+    confirmNewPassword: {
+      error: false,
+      message: "Both passwords did not match",
+    },
   });
 
   const onChangeData = (e) => {
     setData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const resetPassword = async (e) => {
+  const changePassword = async (e) => {
     e.preventDefault();
-
-    if (data.email == "") {
+    const regex =
+      /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,}$/;
+    if (data.newPassword == "" || !data.newPassword.match(regex)) {
       setError((prev) => ({
         ...prev,
-        email: {
-          ...prev.email,
+        newPassword: {
+          ...prev.newPassword,
           error: true,
         },
       }));
@@ -33,34 +46,20 @@ const ChangePassword = () => {
     } else {
       setError((prev) => ({
         ...prev,
-        email: {
-          ...prev.email,
+        newPassword: {
+          ...prev.newPassword,
           error: false,
         },
       }));
     }
-    const res = await forgetPasswordApi(data.email);
-    if (res.success) {
-      setShowOtp(true);
-    } else {
+    if (
+      data.confirmNewPassword == "" ||
+      data.newPassword != data.confirmNewPassword
+    ) {
       setError((prev) => ({
         ...prev,
-        email: {
-          error: true,
-          message: res.message,
-        },
-      }));
-    }
-  };
-
-  const verifyOtp = async (e) => {
-    e.preventDefault();
-
-    if (data.otp == "") {
-      setError((prev) => ({
-        ...prev,
-        otp: {
-          ...prev.otp,
+        confirmNewPassword: {
+          ...prev.confirmNewPassword,
           error: true,
         },
       }));
@@ -68,19 +67,19 @@ const ChangePassword = () => {
     } else {
       setError((prev) => ({
         ...prev,
-        otp: {
-          ...prev.otp,
+        confirmNewPassword: {
+          ...prev.confirmNewPassword,
           error: false,
         },
       }));
     }
-    const res = await verifyOtpApi(data);
+    const res = await changePasswordApi({...data,token});
     if (res.success) {
       console.log(res.message);
     } else {
       setError((prev) => ({
         ...prev,
-        otp: {
+        confirmNewPassword: {
           error: true,
           message: res.message,
         },
@@ -95,40 +94,26 @@ const ChangePassword = () => {
       </Typography>
 
       <Input
-        label="Email"
-        type="email"
-        name="email"
-        disabled={showOtp ? true : false}
+        label="New Password"
+        type="password"
+        name="newPassword"
         onChange={onChangeData}
-        error={error.email.error}
-        _helperText={error.email.error && error.email.message}
+        error={error.newPassword.error}
+        _helperText={error.newPassword.error && error.newPassword.message}
+      />
+      <Input
+        label="Confirm New Password"
+        type="password"
+        name="confirmNewPassword"
+        onChange={onChangeData}
+        error={error.confirmNewPassword.error}
+        _helperText={
+          error.confirmNewPassword.error && error.confirmNewPassword.message
+        }
       />
 
-      {showOtp && (
-        <Input
-          label="OTP"
-          type="text"
-          name="otp"
-          onChange={onChangeData}
-          error={error.otp.error}
-          _helperText={error.otp.error && error.otp.message}
-        />
-      )}
-      {showOtp && (
-        <Typography
-          sx={{ fontSize: "12px", color: "primary.main", mb: 2 }}
-          onClick={resetPassword}
-          textAlign="end"
-        >
-          Resend
-        </Typography>
-      )}
-      <Button
-        fullWidth
-        variant="contained"
-        onClick={!showOtp ? resetPassword : verifyOtp}
-      >
-        {showOtp ? "Submit" : "Send OTP"}
+      <Button fullWidth variant="contained" onClick={changePassword}>
+        Submit
       </Button>
     </Card>
   );

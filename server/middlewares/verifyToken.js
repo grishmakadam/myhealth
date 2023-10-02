@@ -15,21 +15,16 @@ module.exports.verifyToken = async (req, res, next) => {
     return res.json({ success: false, error: "Session Expired" });
   }
   try {
-   
     const { id } = await jwt.verify(token, process.env.TOKEN_KEY);
 
     const user = await User.findOne({ email: id });
     req.user = user;
-console.log("CHECKED")
+    console.log("CHECKED");
     next();
   } catch (e) {
-    console.log(e.message);
-    // res.clearCookie("token");
-    res.status(401).json({ success:false,message: "Request is not authorized" });
+    res.clearCookie("token");
+    res
+      .status(401)
+      .json({ success: false, message: "Request is not authorized" });
   }
-};
-
-module.exports.clearCookie = async (req, res, next) => {
-  res.clearCookie("token");
-  res.send({ success: true });
 };

@@ -3,6 +3,7 @@ const speakeasy = require("speakeasy");
 const { createToken } = require("../middlewares/createToken");
 const { sendOtp } = require("../func/sendOTP");
 const { encryptPassword } = require("../func/encryptPassword");
+const jwt = require("jsonwebtoken");
 module.exports = {
   register: async (req, res) => {
     try {
@@ -31,7 +32,7 @@ module.exports = {
     try {
       const { email, password } = req.body;
       const user = await User.login(email, password);
-      const token = await createToken(email);
+      const token = await createToken(email, "300s");
 
       res.cookie("token", token, {
         httpOnly: true,
@@ -111,19 +112,27 @@ module.exports = {
   },
   changePassword: async (req, res) => {
     try {
-      const { newPassword } = req.body;
+      const { token, newPassword } = req.body;
+      const { id } = await jwt.verify(token, process.env.TOKEN_KEY);
+      const user = await User.find({ email: id });
+      console.log(user);
       const hash = await encryptPassword(newPassword);
-      req.user.password = hash;
-      await req.user.save();
+      user[0].password = hash;
+      await user[0].save();
 
       return res.json({
-        success: false,
+        success: true,
         message: "Password changed successfully!",
       });
     } catch (ex) {
+      console.log(ex.message);
       return res
         .status(500)
         .json({ success: false, message: "Something went wrong!!" });
     }
+  },
+  logout: async (req, res) => {
+    res.clearCookie("token");
+    return res.json({ success: true, message: "Logged out successfully!!!" });
   },
 };

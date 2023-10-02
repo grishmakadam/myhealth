@@ -1,7 +1,8 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
 const speakeasy = require("speakeasy");
-const {encryptPassword}=require("../func/encryptPassword")
+const { encryptPassword } = require("../func/encryptPassword")
+const bcrypt=require("bcrypt")
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
