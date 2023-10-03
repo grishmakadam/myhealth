@@ -30,7 +30,7 @@ const Table = ({ plans }) => {
     <Grid container justifyContent="center">
       <Divider width="100%" />
       {plans.length == 0 && (
-        <Typography textAlign="center">Cart is empty</Typography>
+        <Typography textAlign="center" variant="h6" sx={{my:"40px"}}>Cart is empty</Typography>
       )}
       {plans.length != 0 && (
         <>

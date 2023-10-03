@@ -6,13 +6,35 @@ import {
   Typography,
   Divider,
 } from "@mui/material";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Table from "./Table";
 import { useCart } from "../context/cartContext";
+import BasicModal from "./BasicModal";
 const Cart = () => {
   const { cart } = useCart();
+  const [open, setOpen] = React.useState(false);
 
+  const handleCheckout = () => {
+    setOpen(true)
+  }
+  const [details, setDetails] = useState({
+    items: [],
+    total: 0,
+    charges: 500,
+    tax: 0,
+  });
+
+  useEffect(() => {
+    const tax = (cart.total * 18) / 100;
+    const total = details.charges + tax + cart.total;
+    setDetails((prev) => ({
+      ...prev,
+      items: [...cart.items],
+      tax: tax,
+      total: total,
+    }));
+  }, [cart]);
   console.log(cart);
   return (
     <Grid
@@ -61,7 +83,7 @@ const Cart = () => {
         </Typography>
         <Divider width="100%" />
 
-        {cart.total != 0 &&
+        {cart.total != 0 && (
           <Grid container gap="10px" py={2}>
             <Grid
               item
@@ -76,26 +98,39 @@ const Cart = () => {
               xs={12}
               sx={{ display: "flex", justifyContent: "space-between" }}
             >
-              <Typography>Additional Charges</Typography>
-              <Typography>Rs.{ 500}</Typography>
+              <Typography>Tax (Gst:18%)</Typography>
+              <Typography>Rs.{details.tax}</Typography>
             </Grid>
-            <Divider/>
+            <Grid
+              item
+              xs={12}
+              sx={{ display: "flex", justifyContent: "space-between" }}
+            >
+              <Typography>Additional Charges</Typography>
+              <Typography>Rs.{details.charges}</Typography>
+            </Grid>
+            <Divider width="100%" />
             <Grid
               item
               xs={12}
               sx={{ display: "flex", justifyContent: "space-between" }}
             >
               <Typography variant="h6">Total</Typography>
-              <Typography  variant="h6">Rs.{ cart.total+500}</Typography>
+              <Typography variant="h6">Rs.{details.total}</Typography>
             </Grid>
           </Grid>
-        }
-        {
-          cart.total == 0 &&
-          <Typography>
-              No Order Summary
+        )}
+        {cart.total == 0 && (
+          <Typography variant="h6" sx={{ p: "40px" }}>
+            No Order Summary
           </Typography>
-        }
+        )}
+        {cart.total != 0 && (
+          <Button fullWidth variant="contained" onClick={handleCheckout}>
+            Proceed to checkout
+          </Button>
+        )}
+        <BasicModal open={open} details={details} handleClose={()=>setOpen(false)}/>
       </Grid>
     </Grid>
   );

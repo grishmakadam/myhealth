@@ -1,16 +1,27 @@
 import { Box, Button, Container, Grid, Typography } from "@mui/material";
-import React from "react";
-import { useParams } from "react-router-dom";
+import React, { useContext } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { plans } from "../dummy/plans";
 import { addToCartApi, getAllItemsApi } from "../../apicalls/apicalls";
 import { useCart } from "../context/cartContext";
+import { AuthContext } from "../context/authContext";
 const SpecificPlans = (item) => {
   const { type } = useParams();
   const { getAllItems } = useCart();
-
+  const navigate = useNavigate();
+  const { user } = useContext(AuthContext);
   const addToCart = async (item) => {
-    const res = await addToCartApi(item);
-    await getAllItems();
+    if (user) {
+      const res = await addToCartApi(item);
+      await getAllItems();
+    } else {
+      navigate("/login");
+    }
+  };
+
+  const buyNow = async (item) => {
+    await addToCart(item);
+    navigate("/cart");
   };
   return (
     <Grid
@@ -71,7 +82,9 @@ const SpecificPlans = (item) => {
               <Button variant="contained" onClick={() => addToCart(item)}>
                 Add to cart
               </Button>
-              <Button variant="outlined">Buy Now</Button>
+              <Button variant="outlined" onClick={() => buyNow(item)}>
+                Buy Now
+              </Button>
             </Box>
           </Grid>
         ))}

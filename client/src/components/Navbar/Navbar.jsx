@@ -30,7 +30,7 @@ const loggedOut = [
 const loggedIn = [{ text: "Home", link: "/" }, { text: "Plans" }];
 
 const settings = [
-  { text: "Account", link: "/account" },
+  { text: "Account", link: "/purchase-history" },
   { text: "Log Out", link: "/logout" },
 ];
 
@@ -167,10 +167,6 @@ function ResponsiveAppBar() {
                         visibility: "visible",
                         width: "100%",
                       },
-                      "&:active": {
-                        visibility: "visible",
-                        width: "100%",
-                      },
                     }}
                   >
                     {page.text}
@@ -192,13 +188,14 @@ function ResponsiveAppBar() {
             </Box>
 
             {user && (
-              <Box sx={{ flexGrow: 0 }}>
+              <Box sx={{ flexGrow: 0 ,mr:"30px"}}>
                 <Tooltip title="Open settings">
-                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                    <Avatar
-                      alt="Remy Sharp"
-                      src="/static/images/avatar/2.jpg"
-                    />
+                  <IconButton
+                    onClick={handleOpenUserMenu}
+                    sx={{ p: 0 }}
+                   
+                  >
+                    <Avatar  sx={{bgcolor:"primary.main"}} alt={user.name[0]} src={user.name[0]} />
                   </IconButton>
                 </Tooltip>
                 <Menu
@@ -220,7 +217,7 @@ function ResponsiveAppBar() {
                   <MenuItem onClick={handleCloseUserMenu}>
                     <Typography
                       textAlign="center"
-                      onClick={() => navigate("/")}
+                      onClick={() => navigate("/purchase-history")}
                     >
                       Account
                     </Typography>

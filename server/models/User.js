@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
 const speakeasy = require("speakeasy");
-const { encryptPassword } = require("../func/encryptPassword")
-const bcrypt=require("bcrypt")
+const { encryptPassword } = require("../func/encryptPassword");
+const bcrypt = require("bcrypt");
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -25,6 +25,12 @@ const userSchema = new mongoose.Schema({
       ref: "Cart",
     },
   ],
+  orders: [
+    {
+      type: mongoose.SchemaTypes.ObjectId,
+      ref: "Order",
+    },
+  ],
 });
 
 userSchema.statics.register = async function (name, email, password) {
@@ -41,7 +47,7 @@ userSchema.statics.register = async function (name, email, password) {
     throw { field: "email", message: "Email already in use" };
   }
 
-  const hash = await encryptPassword(password)
+  const hash = await encryptPassword(password);
 
   const otpSecret = speakeasy.generateSecret({ length: 20 }).base32;
 
@@ -68,7 +74,7 @@ userSchema.statics.login = async function (email, password) {
   const match = await bcrypt.compare(password, user.password);
 
   if (match) {
-    return user
+    return user;
   } else {
     throw Error("Incorrect email or password");
   }

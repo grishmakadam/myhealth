@@ -3,6 +3,7 @@ import { Container, Box, Typography, Button } from "@mui/material";
 import Input from "../utils/Input";
 import { forgetPasswordApi, verifyOtpApi } from "../../apicalls/apicalls";
 import Card from "../utils/Card";
+import Alert from "@mui/material/Alert";
 
 const ForgetPassword = () => {
   const [data, setData] = useState({
@@ -21,6 +22,10 @@ const ForgetPassword = () => {
     setData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
+  const [alert, setAlert] = useState({
+    type: null,
+    message: "",
+  });
   const resetPassword = async (e) => {
     e.preventDefault();
 
@@ -45,14 +50,9 @@ const ForgetPassword = () => {
     const res = await forgetPasswordApi(data.email);
     if (res.success) {
       //   setShowOtp(true);
+      setAlert({ type: "success", message: res.message });
     } else {
-      setError((prev) => ({
-        ...prev,
-        email: {
-          error: true,
-          message: res.message,
-        },
-      }));
+      setAlert({ type: "error", message: res.message });
     }
   };
 
@@ -92,22 +92,24 @@ const ForgetPassword = () => {
   //   };
 
   return (
-    <Card>
-      <Typography textAlign="center" marginBottom="20px">
-        Reset Password
-      </Typography>
+    <>
+      {alert.type && <Alert severity={alert.type}>{alert.message}</Alert>}
+      <Card>
+        <Typography textAlign="center" marginBottom="20px">
+          Reset Password
+        </Typography>
 
-      <Input
-        label="Email"
-        type="email"
-        name="email"
-        // disabled={showOtp ? true : false}
-        onChange={onChangeData}
-        error={error.email.error}
-        _helperText={error.email.error && error.email.message}
-      />
+        <Input
+          label="Email"
+          type="email"
+          name="email"
+          // disabled={showOtp ? true : false}
+          onChange={onChangeData}
+          error={error.email.error}
+          _helperText={error.email.error && error.email.message}
+        />
 
-      {/* {showOtp && (
+        {/* {showOtp && (
         <Input
           label="OTP"
           type="text"
@@ -117,7 +119,7 @@ const ForgetPassword = () => {
           _helperText={error.otp.error && error.otp.message}
         />
       )} */}
-      {/* {showOtp && (
+        {/* {showOtp && (
         <Typography
           sx={{ fontSize: "12px", color: "primary.main", mb: 2 }}
           onClick={resetPassword}
@@ -126,10 +128,11 @@ const ForgetPassword = () => {
           Resend
         </Typography>
       )} */}
-      <Button fullWidth variant="contained" onClick={resetPassword}>
-        Submit
-      </Button>
-    </Card>
+        <Button fullWidth variant="contained" onClick={resetPassword}>
+          Submit
+        </Button>
+      </Card>
+    </>
   );
 };
 

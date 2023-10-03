@@ -23,6 +23,7 @@ import { verifyUserApi } from "./apicalls/apicalls";
 import Cart from "./components/Cart/Cart";
 import ForgetPassword from "./components/Auth/ForgetPassword";
 import ChangePassword from "./components/Auth/ChangePassword";
+import PurchaseHistory from "./components/Account/PurchaseHistory";
 function App() {
   const { user, dispatch } = useContext(AuthContext);
 
@@ -51,6 +52,10 @@ function App() {
             <Route
               path="/cart"
               element={user ? <Cart /> : <Navigate to="/" />}
+            />
+             <Route
+              path="/purchase-history"
+              element={user ? <PurchaseHistory /> : <Navigate to="/" />}
             />
           </Route>
           <Route path="/login" element={<LogIn />} />

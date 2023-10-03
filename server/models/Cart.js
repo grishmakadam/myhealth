@@ -4,7 +4,7 @@ const cartSchema = new mongoose.Schema({
   planId: {
     type: Number,
     required: true,
-    unique: true,
+    // unique: true,
   },
   planName: {
     type: String,
@@ -19,7 +19,7 @@ const cartSchema = new mongoose.Schema({
     required: true,
   },
   desc: {
-    type:String
+    type: String,
   },
   quantity: {
     type: Number,
@@ -30,6 +30,10 @@ const cartSchema = new mongoose.Schema({
     required: true,
     default: Date.now(),
   },
+  bought: {
+    type: Boolean,
+    default: false,
+  }
 });
 
 module.exports = mongoose.model("Cart", cartSchema);

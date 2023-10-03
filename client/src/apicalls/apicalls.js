@@ -1,12 +1,14 @@
 import axios from "axios";
 import {
   addToCartUrl,
+  buyItemsUrl,
   changePasswordUrl,
   deleteFromCartUrl,
   forgetPasswordUrl,
   getAllItemsUrl,
   logOutUrl,
   loginUserUrl,
+  purchaseHistoryUrl,
   registerUserUrl,
   removeItemUrl,
   verifyOtpUrl,
@@ -77,4 +79,12 @@ export const changePasswordApi = (data) => {
 
 export const logOutApi = () => {
   return api({ url: logOutUrl, method: "POST" });
+};
+
+export const buyItemsApi = (data) => {
+  return api({ url: buyItemsUrl, method: "PATCH",data:data });
+};
+
+export const purchaseHistoryApi = () => {
+  return api({ url: purchaseHistoryUrl, method: "GET" });
 };

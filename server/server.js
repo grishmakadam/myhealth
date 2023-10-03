@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const userRouter = require("./routes/users");
-const cartRouter=require("./routes/carts")
+const cartRouter = require("./routes/carts");
 const app = express();
 
 mongoose.connect(process.env.DATABASE_URL, { useNewUrlparser: true });
@@ -22,6 +22,6 @@ app.use(
 
 app.use(express.json());
 app.use(cookieParser());
-app.use("/users", userRouter);
-app.use("/cart",cartRouter)
+app.use("/api/users", userRouter);
+app.use("/api/cart", cartRouter);
 app.listen(7000, () => console.log("listening"));
