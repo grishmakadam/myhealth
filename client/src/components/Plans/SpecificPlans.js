@@ -5,15 +5,18 @@ import { plans } from "../dummy/plans";
 import { addToCartApi, getAllItemsApi } from "../../apicalls/apicalls";
 import { useCart } from "../context/cartContext";
 import { AuthContext } from "../context/authContext";
+import useReuseHook from "../hooks/useReuseHook";
+import { initialise_cart } from "../../store/cartSlice";
 const SpecificPlans = (item) => {
   const { type } = useParams();
-  const { getAllItems } = useCart();
-  const navigate = useNavigate();
-  const { user } = useContext(AuthContext);
+
+  const { user, navigate, dispatch } = useReuseHook();
   const addToCart = async (item) => {
     if (user) {
       const res = await addToCartApi(item);
-      await getAllItems();
+      if (res.success) {
+        dispatch(initialise_cart(res.items));
+      }
     } else {
       navigate("/login");
     }

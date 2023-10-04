@@ -10,14 +10,15 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Table from "./Table";
 import { useCart } from "../context/cartContext";
-import BasicModal from "./BasicModal";
+import OrderSummary from "./OrderSummary";
+import useReuseHook from "../hooks/useReuseHook";
 const Cart = () => {
-  const { cart } = useCart();
+  const { cart } = useReuseHook();
   const [open, setOpen] = React.useState(false);
-
+console.log(cart)
   const handleCheckout = () => {
-    setOpen(true)
-  }
+    setOpen(true);
+  };
   const [details, setDetails] = useState({
     items: [],
     total: 0,
@@ -30,12 +31,13 @@ const Cart = () => {
     const total = details.charges + tax + cart.total;
     setDetails((prev) => ({
       ...prev,
-      items: [...cart.items],
+      plans: [...cart.items],
       tax: tax,
       total: total,
     }));
   }, [cart]);
-  console.log(cart);
+
+  console.log(details);
   return (
     <Grid
       container
@@ -130,7 +132,11 @@ const Cart = () => {
             Proceed to checkout
           </Button>
         )}
-        <BasicModal open={open} details={details} handleClose={()=>setOpen(false)}/>
+        <OrderSummary
+          open={open}
+          details={details}
+          handleClose={() => setOpen(false)}
+        />
       </Grid>
     </Grid>
   );

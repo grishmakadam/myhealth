@@ -1,91 +1,82 @@
 import React, { useEffect, useState } from "react";
 import { Grid, Divider, Typography } from "@mui/material";
 import { purchaseHistoryApi } from "../../apicalls/apicalls";
+import { useCart } from "../context/cartContext";
+import { Link, useNavigate } from "react-router-dom";
+import useReuseHook from "../hooks/useReuseHook";
+import { initialise_orders } from "../../store/orderSlice";
+import { log_out } from "../../store/userSlice";
 const Orders = () => {
-  const [orders, setOrders] = useState([]);
+  const { orders, navigate,dispatch } = useReuseHook();
 
-  const purchaseHist = async () => {
-    const res = await purchaseHistoryApi();
-    if (res.success) {
-      setOrders(res.items);
+  const getDetails = async () => {
+    const res2 = await purchaseHistoryApi();
+    if (res2.success) {
+      console.log(res2);
+      dispatch(initialise_orders(res2.items));
+    } else {
+      dispatch(log_out());
     }
   };
+
   useEffect(() => {
-    purchaseHist();
-  }, []);
+    getDetails();
+  }, [orders]);
   return (
-    <Grid container justifyContent="center">
+    <Grid
+      container
+      justifyContent="center"
+      width="100%"
+      px={4}
+      overflowX="auto"
+    >
       <Divider width="100%" />
-      {orders.length == 0 && (
+      {orders.items.length == 0 && (
         <Typography textAlign="center" variant="h6" sx={{ my: "40px" }}>
-          Cart is empty
+          No purchases to show
         </Typography>
       )}
-      {orders.length != 0 && (
+      {orders.items.length != 0 && (
         <>
           <Grid item container paddingX="30px" paddingY="15px" gap="20px">
-            <Grid item xs={4}>
-              <Typography className="headerFont">Plan</Typography>
+            <Grid item xs={3}>
+              <Typography className="headerFont">Order Id</Typography>
             </Grid>
-            <Grid item xs={1}>
-              <Typography className="headerFont" textAlign="center">Quantity</Typography>
-            </Grid>
-            <Grid item xs={1}>
-              <Typography className="headerFont" textAlign="center">Price</Typography>
-            </Grid>
-            <Grid item xs={2}>
-              <Typography className="headerFont" textAlign="center">Tax+Additional Charges</Typography>
+
+            <Grid item xs={3}>
+              <Typography className="headerFont" textAlign="center">
+                Date
+              </Typography>
             </Grid>
             <Grid item xs={2}>
-              <Typography className="headerFont" textAlign="center">Date</Typography>
+              <Typography className="headerFont" textAlign="center">
+                Total Price
+              </Typography>
             </Grid>
-            <Grid item xs={1}>
-              <Typography className="headerFont" textAlign="center">Total Price</Typography>
-            </Grid>
+            <Grid item xs={3}></Grid>
           </Grid>
           <Divider width="100%" />
-          {orders.map((item) => (
+          {orders.items.map((item) => (
             <>
-              <Grid item container padding="30px" gap="20px" key={item.planId}>
+              <Grid
+                item
+                container
+                padding="30px"
+                gap="20px"
+                key={item._id}
+                onClick={() => navigate(`/purchase-history/${item._id}`)}
+              >
                 <Grid
                   item
-                  xs={4}
+                  xs={3}
                   sx={{ display: "flex", flexDirection: "column" }}
                 >
-                  {item.plans.map((x) => (
-                    <Typography className="normalFont">{x.planName}</Typography>
-                  ))}
+                  <Typography className="normalFont">{item._id}</Typography>
                 </Grid>
 
                 <Grid
                   item
-                  xs={1}
-                  sx={{ display: "flex", flexDirection: "column" }}
-                >
-                  {item.plans.map((x) => (
-                    <Typography className="normalFont" textAlign="center">{x.quantity}</Typography>
-                  ))}
-                </Grid>
-                <Grid
-                  item
-                  xs={1}
-                  sx={{ display: "flex", flexDirection: "column" }}
-                >
-                  {item.plans.map((x) => (
-                    <Typography className="normalFont" textAlign="center">Rs.{x.price}</Typography>
-                  ))}
-                </Grid>
-                <Grid
-                  item
-                  xs={2}
-                  sx={{ display: "flex", flexDirection: "column" }}
-                >
-                    <Typography className="normalFont " textAlign="center">Rs.{500+item.tax}</Typography>
-                  
-                </Grid>
-                <Grid
-                  item
-                  xs={2}
+                  xs={3}
                   sx={{ display: "flex", flexDirection: "column" }}
                 >
                   <Typography className="normalFont" textAlign="center">
@@ -94,12 +85,23 @@ const Orders = () => {
                 </Grid>
                 <Grid
                   item
-                  xs={1}
+                  xs={2}
                   sx={{ display: "flex", flexDirection: "column" }}
                 >
                   <Typography className="normalFont" textAlign="center">
                     Rs.{item.total}
                   </Typography>
+                </Grid>
+                <Grid
+                  item
+                  xs={3}
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                  }}
+                >
+                  <Link to={`/purchase-history/${item._id}`}>More Details</Link>
                 </Grid>
               </Grid>
               <Divider width="100%" />

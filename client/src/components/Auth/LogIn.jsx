@@ -5,10 +5,15 @@ import { Link, useNavigate } from "react-router-dom";
 import { loginUserApi } from "../../apicalls/apicalls";
 import { AuthContext } from "../context/authContext";
 import Card from "../utils/Card";
+import { useCart } from "../context/cartContext";
+import { set_snackbar } from "../../store/snackbarSlice";
+import { useDispatch } from "react-redux";
+import useReuseHook from "../hooks/useReuseHook";
+import { log_in } from "../../store/userSlice";
 
 const LogIn = () => {
-  const navigate = useNavigate();
-  const { dispatch } = useContext(AuthContext);
+  const { dispatch, navigate }=useReuseHook()
+  const { getAllItems, getAllOrders } = useCart();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -48,16 +53,17 @@ const LogIn = () => {
       }));
     }
     if (m == 1) {
-      console.log("hii");
       return;
     }
 
     const res = await loginUserApi(formData);
     if (res.success) {
-      dispatch({
-        type: "LOGIN",
-        payload: { email: res.email, name: res.name },
-      });
+      dispatch(log_in({ email: res.email, name: res.name }));
+      dispatch(set_snackbar({
+        severity:"success",message:"User logged in successfully!!!"
+      }))
+      // await getAllItems();
+      // await getAllOrders();
       navigate("/");
     } else {
       setError((prev) => ({

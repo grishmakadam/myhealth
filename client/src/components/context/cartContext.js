@@ -5,12 +5,11 @@ import React, {
   useReducer,
   useState,
 } from "react";
-import { addToCartApi, getAllItemsApi } from "../../apicalls/apicalls";
-
-const initialState = {
-  items: [],
-  message: "",
-};
+import {
+  addToCartApi,
+  getAllItemsApi,
+  purchaseHistoryApi,
+} from "../../apicalls/apicalls";
 
 const CartContext = createContext();
 
@@ -81,6 +80,7 @@ const CartProvider = ({ children }) => {
 
   const [cart, setCart] = useState({ items: [], quantity: 0, total: 0 });
 
+  const [orders, setOrders] = useState([]);
   const getAllItems = async () => {
     const res = await getAllItemsApi();
     if (res.success) {
@@ -100,12 +100,19 @@ const CartProvider = ({ children }) => {
       }));
     }
   };
-  useEffect(() => {
-    getAllItems();
-  }, []);
+  const getAllOrders = async () => {
+    const res = await purchaseHistoryApi();
+    if (res.success) {
+      setOrders(res.items);
+    }
+  };
+  // useEffect(() => {
+  //   getAllItems();
+  //   getAllOrders();
+  // }, []);
 
   return (
-    <CartContext.Provider value={{ cart, getAllItems }}>
+    <CartContext.Provider value={{ cart, getAllItems, orders, getAllOrders }}>
       {children}
     </CartContext.Provider>
   );

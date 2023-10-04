@@ -5,13 +5,26 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { AuthContextProvider } from "./components/context/authContext";
 import { CartProvider } from "./components/context/cartContext";
+import { Provider } from "react-redux";
+import { persistor, store } from "./store/appStore";
+import { PersistGate } from "redux-persist/integration/react";
+import { BrowserRouter } from "react-router-dom";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-    <AuthContextProvider>
-      <CartProvider>
-        <App />
-      </CartProvider>
-    </AuthContextProvider>
+  <React.StrictMode>
+    <Provider store={store}>
+    <PersistGate loading={null} persistor={persistor}>
+
+      <AuthContextProvider>
+          <CartProvider>
+            <BrowserRouter>
+              <App />
+              </BrowserRouter>
+        </CartProvider>
+        </AuthContextProvider>
+        </PersistGate>
+    </Provider>
+  </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function

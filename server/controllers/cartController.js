@@ -12,10 +12,12 @@ module.exports = {
         const item = await Cart.findById(existingItem[0]._id);
         item.quantity += 1;
         await item.save();
-        const cart = await user.populate("cart");
+        let cart = await user.populate("cart");
+        cart = cart.cart.filter((item) => !item.bought);
+
         return res.json({
           success: true,
-          items: cart.cart,
+          items: cart,
         });
       }
       const newItem = new Cart({
@@ -26,10 +28,11 @@ module.exports = {
       await newItem.save();
       user.cart.push(newItem._id);
       await user.save();
-      const cart = await user.populate("cart");
+      let cart = await user.populate("cart");
+      cart = cart.cart.filter((item) => !item.bought);
       return res.json({
         success: true,
-        items: cart.cart,
+        items: cart,
       });
     } catch (ex) {
       return res.json({ success: false, message: ex.message });
@@ -43,18 +46,23 @@ module.exports = {
         (x) => x.planId == req.body.planId && x.bought != true
       );
 
-      if (existingItem.length != 0) {
+        if (existingItem.length != 0) {
+          console.log("heloo")
         const item = await Cart.findById(existingItem[0]._id);
 
         if (item.quantity < 2) {
           await Cart.findByIdAndRemove(item._id);
-          return res.json({ success: true, items: cart.cart });
+          let cart = await user.populate("cart");
+          cart = cart.cart.filter((x) => x.bought != true);
+          return res.json({ success: true, items: cart });
         }
         item.quantity -= 1;
 
         await item.save();
-        const cart = await user.populate("cart");
-        return res.json({ success: true, items: cart.cart });
+        let cart = await user.populate("cart");
+        cart = cart.cart.filter((x) => x.bought != true);
+
+        return res.json({ success: true, items: cart });
       }
 
       return res.json({
@@ -74,8 +82,10 @@ module.exports = {
 
       if (existingItem.length != 0) {
         const item = await Cart.findByIdAndRemove(existingItem[0]._id);
-        const cart = await user.populate("cart");
-        return res.json({ success: true, items: cart.cart });
+        let cart = await user.populate("cart");
+        cart = cart.cart.filter((x) => x.bought != true);
+
+        return res.json({ success: true, items: cart });
       }
       return res.json({ success: false, message: "No such item in cart!!" });
     } catch (ex) {
@@ -103,18 +113,18 @@ module.exports = {
         tax: tax,
       });
       for (let item of cart.cart) {
-          if (!item.bought) {
-              item.bought = true;
-              await item.save();
-              await order.plans.push(item);
-          }
+        if (!item.bought) {
+          item.bought = true;
+          await item.save();
+          await order.plans.push(item);
+        }
       }
       const newOrder = await order.save();
       await user.orders.push(newOrder);
       await user.save();
       return res.json({
         success: true,
-        items: cart.cart,
+        items: cart.cart.filter((item) => !item.bought),
       });
     } catch (ex) {
       console.log(ex.message);

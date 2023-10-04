@@ -1,15 +1,19 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
-import Popper from "@mui/material/Popper";
+import Popover from "@mui/material/Popover";
 import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import "../Hero/style.css";
-export default function PlanPopper({placement}) {
+export default function PlanPopper({ placement }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const navigate = useNavigate();
 
   const handleClick = (event) => {
-    setAnchorEl(anchorEl ? null : event.currentTarget);
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
   };
 
   const open = Boolean(anchorEl);
@@ -17,13 +21,30 @@ export default function PlanPopper({placement}) {
 
   return (
     <>
-      <Button aria-describedby={id} onClick={handleClick} className="link" sx={{my:"16px",zIndex:"64"}}>
+      <Button
+        aria-describedby={id}
+        onClick={handleClick}
+        className="link"
+        sx={{ my: "16px", zIndex: "64" }}
+      >
         Plans
       </Button>
-      <Popper id={id} open={open} anchorEl={anchorEl} placement={placement} >
+      <Popover
+        id={id}
+        open={open}
+        anchorEl={anchorEl}
+        onClose={handleClose}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "center",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "center",
+        }}
+      >
         <Box
           sx={{
-            border: 1,
             p: 1,
             bgcolor: "background.paper",
             display: "flex",
@@ -50,7 +71,7 @@ export default function PlanPopper({placement}) {
             Gynaec Plans
           </Button>
         </Box>
-      </Popper>
+      </Popover>
     </>
   );
 }

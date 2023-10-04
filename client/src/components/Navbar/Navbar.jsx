@@ -20,6 +20,8 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { Badge } from "@mui/material";
 import { useCart } from "../context/cartContext";
 import { logOutApi } from "../../apicalls/apicalls";
+import useReuseHook from "../hooks/useReuseHook";
+import { log_out } from "../../store/userSlice";
 const loggedOut = [
   { text: "Home", link: "/" },
   { text: "Plans" },
@@ -38,8 +40,7 @@ function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [pages, setPages] = React.useState(loggedOut);
-  const navigate = useNavigate();
-  const { cart } = useCart();
+ const {cart,navigate}=useReuseHook()
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -58,9 +59,10 @@ function ResponsiveAppBar() {
     setAnchorElUser(null);
   };
 
-  const { user, dispatch } = React.useContext(AuthContext);
+  const { user, dispatch } = useReuseHook();
 
   React.useEffect(() => {
+    console.log(user);
     if (user) {
       setPages(loggedIn);
     } else {
@@ -70,7 +72,8 @@ function ResponsiveAppBar() {
 
   const handleLogOut = async () => {
     const res = await logOutApi();
-    dispatch({ type: "LOGOUT" });
+    dispatch(log_out());
+    navigate("/login")
   };
   return (
     <AppBar position="sticky" sx={{ backgroundColor: "#fff", top: 0 }}>
@@ -188,14 +191,14 @@ function ResponsiveAppBar() {
             </Box>
 
             {user && (
-              <Box sx={{ flexGrow: 0 ,mr:"30px"}}>
+              <Box sx={{ flexGrow: 0, mr: "30px" }}>
                 <Tooltip title="Open settings">
-                  <IconButton
-                    onClick={handleOpenUserMenu}
-                    sx={{ p: 0 }}
-                   
-                  >
-                    <Avatar  sx={{bgcolor:"primary.main"}} alt={user.name[0]} src={user.name[0]} />
+                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                    <Avatar
+                      sx={{ bgcolor: "primary.main" }}
+                      alt={user.name && user.name[0]}
+                      src={user.name && user.name[0]}
+                    />
                   </IconButton>
                 </Tooltip>
                 <Menu
