@@ -22,7 +22,7 @@ const style = {
 };
 
 export default function OrderSummary({ open, details, handleClose }) {
-  const { dispatch } = useReuseHook();
+  const { dispatch, logOut } = useReuseHook();
 
   const buyItem = async () => {
     const res = await buyItemsApi(details);
@@ -30,7 +30,7 @@ export default function OrderSummary({ open, details, handleClose }) {
       dispatch(initialise_cart(res.items));
       handleClose();
     } else {
-      console.log(res.message);
+      logOut();
     }
   };
 

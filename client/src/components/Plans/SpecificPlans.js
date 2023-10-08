@@ -10,15 +10,13 @@ import { initialise_cart } from "../../store/cartSlice";
 const SpecificPlans = (item) => {
   const { type } = useParams();
 
-  const { user, navigate, dispatch } = useReuseHook();
+  const { user, navigate, dispatch, logOut } = useReuseHook();
   const addToCart = async (item) => {
-    if (user) {
-      const res = await addToCartApi(item);
-      if (res.success) {
-        dispatch(initialise_cart(res.items));
-      }
+    const res = await addToCartApi(item);
+    if (res.success) {
+      dispatch(initialise_cart(res.items));
     } else {
-      navigate("/login");
+      logOut(res);
     }
   };
 

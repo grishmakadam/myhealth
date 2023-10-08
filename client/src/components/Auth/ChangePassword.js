@@ -82,7 +82,7 @@ const ChangePassword = () => {
         ...prev,
         confirmNewPassword: {
           error: true,
-          message: res.message,
+          message: res.data.message,
         },
       }));
     }

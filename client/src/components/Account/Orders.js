@@ -7,21 +7,21 @@ import useReuseHook from "../hooks/useReuseHook";
 import { initialise_orders } from "../../store/orderSlice";
 import { log_out } from "../../store/userSlice";
 const Orders = () => {
-  const { orders, navigate,dispatch } = useReuseHook();
+  const { orders, navigate, dispatch, logOut } = useReuseHook();
 
   const getDetails = async () => {
     const res2 = await purchaseHistoryApi();
     if (res2.success) {
-      console.log(res2);
       dispatch(initialise_orders(res2.items));
     } else {
-      dispatch(log_out());
+      console.log("hello");
+      logOut(res2);
     }
   };
 
   useEffect(() => {
     getDetails();
-  }, [orders]);
+  }, []);
   return (
     <Grid
       container

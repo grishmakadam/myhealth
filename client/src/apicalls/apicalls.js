@@ -14,6 +14,7 @@ import {
   verifyOtpUrl,
   verifyUserUrl,
 } from "./url";
+import useReuseHook from "../components/hooks/useReuseHook";
 
 const api = async (config) => {
   try {
@@ -24,8 +25,7 @@ const api = async (config) => {
     });
     return res.data;
   } catch (e) {
-    console.log(e);
-    return e.response.data;
+    return e.response;
   }
 };
 
@@ -82,7 +82,7 @@ export const logOutApi = () => {
 };
 
 export const buyItemsApi = (data) => {
-  return api({ url: buyItemsUrl, method: "PATCH",data:data });
+  return api({ url: buyItemsUrl, method: "PATCH", data: data });
 };
 
 export const purchaseHistoryApi = () => {

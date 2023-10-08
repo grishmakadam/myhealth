@@ -10,33 +10,29 @@ import useReuseHook from "../hooks/useReuseHook";
 import { initialise_cart } from "../../store/cartSlice";
 
 const Table = ({ plans }) => {
-  const { dispatch } = useReuseHook();
+  const { dispatch, logOut } = useReuseHook();
 
-
-  useEffect(()=>{},[plans])
-  const initialiseCart = (items) => {
-    console.log(items)
-    dispatch(initialise_cart(items))
+  useEffect(() => {}, [plans]);
+  const initialiseCart = (res) => {
+    if (res.success) {
+      dispatch(initialise_cart(res.items));
+    } else {
+      logOut(res);
+    }
   };
   const handleAddToCart = async (item) => {
     const res = await addToCartApi(item);
-    if (res.success) {
-      initialiseCart(res.items);
-    }
+    initialiseCart(res);
   };
 
   const handleRemoveFromCart = async (item) => {
     const res = await removeItemApi(item);
-    if (res.success) {
-      initialiseCart(res.items);
-    }
+    initialiseCart(res);
   };
 
   const handleDeleteFromCart = async (data) => {
     const res = await deleteItemApi(data);
-    if (res.success) {
-      initialiseCart(res.items);
-    }
+    initialiseCart(res);
   };
 
   return (

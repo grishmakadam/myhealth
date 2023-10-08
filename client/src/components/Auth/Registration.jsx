@@ -5,10 +5,12 @@ import { Link, useNavigate } from "react-router-dom";
 import { registerUserApi } from "../../apicalls/apicalls";
 import { AuthContext } from "../context/authContext";
 import Card from "../utils/Card";
+import { set_snackbar } from "../../store/snackbarSlice";
+import useReuseHook from "../hooks/useReuseHook";
+import { log_in } from "../../store/userSlice";
 
 const Registration = () => {
-  const navigate = useNavigate();
-  const { dispatch } = useContext(AuthContext);
+  const { dispatch, navigate } = useReuseHook();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -97,19 +99,23 @@ const Registration = () => {
 
     const res = await registerUserApi(formData);
     if (res.success) {
-      dispatch({
-        type: "LOGIN",
-        payload: { email: res.email, name: res.name },
-      });
+      dispatch(log_in({ email: res.email, name: res.name }));
+      dispatch(
+        set_snackbar({
+          severity: "success",
+          message: "User registered successfully!",
+        })
+      );
+      console.log("hiii");
       navigate("/");
     } else {
-      if (res.field == "email") {
+      if (res.data.field == "email") {
         setError((prev) => ({
           ...prev,
-          email: { error: true, message: res.message },
+          email: { error: true, message: res.data.message },
         }));
       }
-      if (res.field == "password") {
+      if (res.data.field == "password") {
         setError((prev) => ({
           ...prev,
           password: { error: true, message: res.message },
@@ -159,14 +165,14 @@ const Registration = () => {
           onFocus={(e) => handleTouch(e, true)}
           onBlur={(e) => handleTouch(e, false)}
         />
-          <Input
+        <Input
           label="Confirm Password"
           name="confirmPassword"
           type="password"
           onChange={onChangeData}
           error={error.confirmPassword.error}
           _helperText={
-            (error.confirmPassword.error ) && error.confirmPassword.message
+            error.confirmPassword.error && error.confirmPassword.message
           }
           onFocus={(e) => handleTouch(e, true)}
           onBlur={(e) => handleTouch(e, false)}

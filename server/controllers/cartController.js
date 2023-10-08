@@ -95,8 +95,10 @@ module.exports = {
   getAllCartItems: async (req, res) => {
     const user = req.user;
     let cart = await user.populate("cart");
-    console.log(cart.cart);
-    cart = cart.cart.filter((x) => x.bought != true);
+      console.log(cart.cart);
+      
+      cart = cart.cart.filter((x) => x.bought != true);
+      console.log("hello")
     return res.json({
       success: true,
       items: cart,

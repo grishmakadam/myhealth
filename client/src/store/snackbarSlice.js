@@ -10,10 +10,12 @@ const snackbarSlice = createSlice({
   name: "snackbar",
   initialState: initialState,
   reducers: {
-    set_snackbar(state, action) {
+      set_snackbar(state, action) {
+          console.log(action.payload)
       state.open = true;
       state.severity = action.payload.severity;
-      state.message = action.payload.message;
+          state.message = action.payload.message;
+          console.log(state)
     },
     remove_snackbar(state, action) {
       state.open = false;

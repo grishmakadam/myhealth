@@ -68,7 +68,7 @@ const LogIn = () => {
     } else {
       setError((prev) => ({
         ...prev,
-        password: { error: true, message: res.message },
+        password: { error: true, message: res.data.message },
       }));
     }
   };

@@ -16,7 +16,8 @@ const userSlice = createSlice({
       console.log(state.name);
     },
     log_out(state, action) {
-      state = null;
+      state.name = "";
+      state.email = "";
     },
   },
 });

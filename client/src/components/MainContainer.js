@@ -9,16 +9,16 @@ import { initialise_orders } from "../store/orderSlice";
 import { log_out } from "../store/userSlice";
 
 const MainContainer = () => {
-  const { user, dispatch } = useReuseHook();
+  const { user, dispatch, logOut } = useReuseHook();
 
   const getDetails = async () => {
     const res1 = await getAllItemsApi();
     if (res1.success) {
       dispatch(initialise_cart(res1.items));
     } else {
-      dispatch(log_out());
+      console.log("bebbf")
+      logOut(res1);
     }
-   
   };
 
   useEffect(() => {

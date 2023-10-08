@@ -15,10 +15,12 @@ import useReuseHook from "../hooks/useReuseHook";
 const Cart = () => {
   const { cart } = useReuseHook();
   const [open, setOpen] = React.useState(false);
-console.log(cart)
+  console.log(cart);
   const handleCheckout = () => {
     setOpen(true);
   };
+  console.log("cart")
+
   const [details, setDetails] = useState({
     items: [],
     total: 0,

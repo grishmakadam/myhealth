@@ -32,7 +32,7 @@ const loggedOut = [
 const loggedIn = [{ text: "Home", link: "/" }, { text: "Plans" }];
 
 const settings = [
-  { text: "Account", link: "/purchase-history" },
+  { text: "Orders", link: "/purchase-history" },
   { text: "Log Out", link: "/logout" },
 ];
 
@@ -40,7 +40,7 @@ function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [pages, setPages] = React.useState(loggedOut);
- const {cart,navigate}=useReuseHook()
+  const { cart, navigate } = useReuseHook();
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -73,7 +73,7 @@ function ResponsiveAppBar() {
   const handleLogOut = async () => {
     const res = await logOutApi();
     dispatch(log_out());
-    navigate("/login")
+    navigate("/login");
   };
   return (
     <AppBar position="sticky" sx={{ backgroundColor: "#fff", top: 0 }}>
@@ -222,7 +222,7 @@ function ResponsiveAppBar() {
                       textAlign="center"
                       onClick={() => navigate("/purchase-history")}
                     >
-                      Account
+                      Orders
                     </Typography>
                   </MenuItem>
                   <MenuItem onClick={handleCloseUserMenu}>
